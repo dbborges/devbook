@@ -16,7 +16,6 @@ func JSON(w http.ResponseWriter, statusCode int, dados interface{}) {
 			log.Fatal(erro)
 		}
 	}
-
 }
 
 // Erro retorna um erro em formato JSON
