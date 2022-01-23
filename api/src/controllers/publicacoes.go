@@ -89,7 +89,7 @@ func BuscarPublicacao(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	publicacaoID, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
 	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
+		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
@@ -122,7 +122,7 @@ func AtualizarPublicacao(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	publicacaoID, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
 	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
+		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
@@ -184,7 +184,7 @@ func DeletarPublicacao(w http.ResponseWriter, r *http.Request) {
 	parametros := mux.Vars(r)
 	publicacaoID, erro := strconv.ParseUint(parametros["publicacaoId"], 10, 64)
 	if erro != nil {
-		respostas.Erro(w, http.StatusInternalServerError, erro)
+		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
 
@@ -214,4 +214,29 @@ func DeletarPublicacao(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	respostas.JSON(w, http.StatusNoContent, nil)
+}
+
+// BuscarPublicacoesPorUsuario traz todas as publicações de um usuário específico
+func BuscarPublicacoesPorUsuario(w http.ResponseWriter, r *http.Request) {
+	parametros := mux.Vars(r)
+	usuarioID, erro := strconv.ParseUint(parametros["usuarioId"], 10, 64)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+
+	db, erro := banco.Conectar()
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDePublicacoes(db)
+	publicacoes, erro := repositorio.BuscarPorUsuario(usuarioID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	respostas.JSON(w, http.StatusOK, publicacoes)
 }
