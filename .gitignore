@@ -1,2 +1,8 @@
 api/.idea
 webapp/.idea
+webapp/webapp.exe
+/.idea/modules.xml
+/.idea/sqldialects.xml
+/.idea/vcs.xml
+/.idea/dataSources.xml
+/.idea/DevBook.iml
